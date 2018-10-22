@@ -1,0 +1,19 @@
+{
+  "name": "Mote",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@gitlab.com/hellorich/mote.git"
+  },
+  "author": "Rich Cookson",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://gitlab.com/hellorich/mote/issues"
+  },
+  "homepage": "https://gitlab.com/hellorich/mote#readme"
+}
