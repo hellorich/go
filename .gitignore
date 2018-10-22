@@ -4,5 +4,6 @@
 # Ignore generated files
 public
 
-# Ignore node_modules
+# Ignore node stuff
+npm-debug.log
 node_modules
