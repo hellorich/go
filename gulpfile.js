@@ -1,7 +1,19 @@
-'use strict';
+const gulp = require('gulp');
+const babel = require('gulp-babel');
 
-import gulp from 'gulp';
+const path = {
+  'scripts': {
+    'dest': 'public/assets/js',
+    'src': 'src/js',
+    'files': '**/*.js'
+  }
+}
 
-gulp.task('hello', () => {
-  console.log('Hello, World!');
+gulp.task('js', (done) => {
+  gulp.src(`${path.scripts.src}/${path.scripts.files}`)
+    .pipe(babel({
+      presets: ['@babel/env']
+    }))
+    .pipe(gulp.dest(path.scripts.dest));
+  done();
 });
