@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
+  "engines": {
+    "node": "10.12.0"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -15,5 +18,8 @@
   "bugs": {
     "url": "https://gitlab.com/hellorich/mote/issues"
   },
-  "homepage": "https://gitlab.com/hellorich/mote#readme"
+  "homepage": "https://gitlab.com/hellorich/mote#readme",
+  "dependencies": {
+    "gulp": "4.0.0"
+  }
 }
