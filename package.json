@@ -19,7 +19,8 @@
     "url": "https://gitlab.com/hellorich/mote/issues"
   },
   "homepage": "https://gitlab.com/hellorich/mote#readme",
-  "dependencies": {
+  "dependencies": {},
+  "devDependencies": {
     "gulp": "4.0.0"
   }
 }
