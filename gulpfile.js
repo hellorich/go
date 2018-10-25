@@ -6,9 +6,18 @@ const babelify = require('babelify');
 const buffer = require('vinyl-buffer');
 const source = require('vinyl-source-stream');
 const uglify = require('gulp-uglify');
-const sourcemaps = require('gulp-sourcemaps')
+const sourcemaps = require('gulp-sourcemaps');
+const rename = require('gulp-ext-replace');
+const handlebars = require('gulp-compile-handlebars');
+const plumber = require('gulp-plumber');
+const notify = require('gulp-notify');
 
 const path = {
+  'html': {
+    'dest': 'dist',
+    'src': 'src/hbs',
+    'files': '**/*.hbs',
+  },
   'scripts': {
     'dest': 'public/assets/js',
     'src': 'src/js',
@@ -19,6 +28,23 @@ const path = {
 // Helper: Clean
 // Delete generated files
 const clean = () => del(['public']);
+
+// Task: HTML
+gulp.task('html', (done) => {
+  gulp.src([`${path.html.src}/${path.html.files}`, `!${path.html.src}/partials/${path.html.files}`])
+    .pipe(plumber({ errorHandler: function(err) {
+      notify.onError({
+        title: 'Gulp error in ' + err.plugin,
+        message:  err.toString()
+      })(err);
+    }}))
+    .pipe(handlebars({}, {
+      batch: `${path.html.src}/partials`
+    }))
+    .pipe(rename('.html'))
+    .pipe(gulp.dest(path.html.dest));
+  done();
+});
 
 // Task: JavaScript
 // Uses Babel to allow modern JavaScript to be used.
