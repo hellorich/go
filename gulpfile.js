@@ -48,6 +48,30 @@ gulp.task('html', (done) => {
   done();
 });
 
+// Task: CSS
+// Generate SCSS dependencies, custom code, compress it and prefix it,
+// then compile into single file for best performance in HTTP/1.1
+gulp.task('css', (done) => {
+  gulp.src([`${path.styles.src}/${path.styles.files}`])
+    .pipe(plumber({ errorHandler: function(err) {
+      notify.onError({
+        title: 'Gulp error in ' + err.plugin,
+        message:  err.toString()
+      })(err);
+    }}))
+    .pipe(sourcemaps.init())
+    .pipe(sass({
+      outputStyle: 'compressed'
+    }))
+    .pipe(autoprefixer({
+      browsers: ['last 2 versions'] // Adjust this to our requirements in a config file
+    }))
+    //.pipe(concat('styles.css'))
+    .pipe(sourcemaps.write('./maps'))
+    .pipe(gulp.dest(path.styles.dest));
+  done();
+});
+
 // Task: JavaScript
 // Uses Babel to allow modern JavaScript to be used.
 gulp.task('js', (done) => {
@@ -85,6 +109,7 @@ gulp.task('server', (done) => {
   });
 
   gulp.watch(`${path.html.src}/${path.html.files}`, gulp.series('html', 'reload'));
+  gulp.watch(`${path.styles.src}/${path.styles.files}`, gulp.series('css', 'reload'));
   gulp.watch(`${path.scripts.src}/${path.scripts.files}`, gulp.series('js', 'reload'));
   done();
 });
@@ -92,6 +117,6 @@ gulp.task('server', (done) => {
 // Task: Default
 gulp.task('default',
   gulp.series(clean,
-    gulp.parallel('html', 'js', 'server')
+    gulp.parallel('html', 'css', 'js', 'server')
   )
 );
