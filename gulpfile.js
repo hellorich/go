@@ -3,6 +3,8 @@ const del = require('del');
 const babel = require('gulp-babel');
 const browserify = require('browserify');
 const babelify = require('babelify');
+const buffer = require('vinyl-buffer');
+const source = require('vinyl-source-stream');
 const uglify = require('gulp-uglify');
 const sourcemaps = require('gulp-sourcemaps')
 
@@ -28,8 +30,11 @@ gulp.task('js', (done) => {
   })
   .transform('babelify', { presets: ['@babel/env'] })
   .bundle()
-  .pipe(source('app.js', `${path.scripts.dist}`))
+  .pipe(source('app.js'))
   .pipe(buffer())
+  .pipe(sourcemaps.init())
+  .pipe(uglify())
+  .pipe(sourcemaps.write('./maps'))
   .pipe(gulp.dest(path.scripts.dest));
   done();
 });

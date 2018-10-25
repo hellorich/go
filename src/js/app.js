@@ -1,3 +1,3 @@
-import Test from 'test';
+import Test from './modules/test';
 
-console.log(`${hello}`);
+console.log(`${greeting}`);
