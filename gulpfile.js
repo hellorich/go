@@ -18,6 +18,7 @@ const ext = require('gulp-ext-replace');
 const server = require('browser-sync').create();
 
 const path = {
+  'server': './public',
   'html': {
     'dest': 'public',
     'src': 'src/hbs',
@@ -112,7 +113,7 @@ gulp.task('server', (done) => {
     notify: false,
     open: false,
     server: {
-      baseDir: './public'
+      baseDir: path.server
     }
   });
 
