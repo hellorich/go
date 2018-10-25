@@ -1,8 +1,10 @@
 const gulp = require('gulp');
 const del = require('del');
-const handlebars = require('gulp-compile-handlebars');
 const plumber = require('gulp-plumber');
 const notify = require('gulp-notify');
+const handlebars = require('gulp-compile-handlebars');
+const imagemin = require('gulp-imagemin');
+const pngquant = require('imagemin-pngquant');
 const sass = require('gulp-sass');
 const concat = require('gulp-concat');
 const autoprefixer = require('gulp-autoprefixer');
@@ -23,6 +25,11 @@ const path = {
     'dest': 'public',
     'src': 'src/hbs',
     'files': '**/*.hbs',
+  },
+  'images': {
+    'dest': 'public/assets/img',
+    'src': 'src/img',
+    'files': '**/*.{gif,png,jpg,svg}'
   },
   'styles': {
     'dest': 'public/assets/css',
@@ -54,6 +61,18 @@ gulp.task('html', (done) => {
     }))
     .pipe(ext('.html'))
     .pipe(gulp.dest(path.html.dest));
+  done();
+});
+
+// Task: Images
+// Uses image min to process project image files
+gulp.task('img', (done) => {
+  gulp.src(`${path.images.src}/${path.images.files}`)
+    .pipe(imagemin({
+      progressive: true,
+      use: [pngquant()]
+    }))
+    .pipe(gulp.dest(path.images.dest));
   done();
 });
 
@@ -118,6 +137,7 @@ gulp.task('server', (done) => {
   });
 
   gulp.watch(`${path.html.src}/${path.html.files}`, gulp.series('html', 'reload'));
+  gulp.watch(`${path.images.src}/${path.images.files}`, gulp.series('img', 'reload'))
   gulp.watch(`${path.styles.src}/${path.styles.files}`, gulp.series('css', 'reload'));
   gulp.watch(`${path.scripts.src}/${path.scripts.files}`, gulp.series('js', 'reload'));
   done();
@@ -126,6 +146,6 @@ gulp.task('server', (done) => {
 // Task: Default
 gulp.task('default',
   gulp.series(clean,
-    gulp.parallel('html', 'css', 'js', 'server')
+    gulp.parallel('html', 'img', 'css', 'js', 'server')
   )
 );
