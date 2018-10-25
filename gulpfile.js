@@ -12,6 +12,8 @@ const handlebars = require('gulp-compile-handlebars');
 const plumber = require('gulp-plumber');
 const notify = require('gulp-notify');
 
+const server = require('browser-sync').create();
+
 const path = {
   'html': {
     'dest': 'public',
@@ -65,9 +67,31 @@ gulp.task('js', (done) => {
   done();
 });
 
+// Task: Reload BrowserSync server
+gulp.task('reload', (done) => {
+  server.reload();
+  done();
+});
+
+// Task: BrowserSync server configuration and watch paths
+gulp.task('server', (done) => {
+  server.init({
+    browser: 'google chrome',
+    notify: false,
+    open: false,
+    server: {
+      baseDir: './public'
+    }
+  });
+
+  gulp.watch(`${path.html.src}/${path.html.files}`, gulp.series('html', 'reload'));
+  gulp.watch(`${path.scripts.src}/${path.scripts.files}`, gulp.series('js', 'reload'));
+  done();
+});
+
 // Task: Default
 gulp.task('default',
   gulp.series(clean,
-    gulp.parallel('html', 'js')
+    gulp.parallel('html', 'js', 'server')
   )
 );
