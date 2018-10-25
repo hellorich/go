@@ -1,3 +1,3 @@
-const hello = 'hello world again';
+import Test from 'test';
 
 console.log(`${hello}`);
