@@ -12,14 +12,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@gitlab.com/hellorich/mote.git"
+    "url": "git+ssh://git@gitlab.com/hellorich/go.git"
   },
   "author": "Rich Cookson",
   "license": "ISC",
   "bugs": {
-    "url": "https://gitlab.com/hellorich/mote/issues"
+    "url": "https://gitlab.com/hellorich/go/issues"
   },
-  "homepage": "https://gitlab.com/hellorich/mote#readme",
+  "homepage": "https://gitlab.com/hellorich/go#readme",
   "dependencies": {},
   "devDependencies": {
     "@babel/core": "7.1.2",
