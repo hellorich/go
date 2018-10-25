@@ -14,7 +14,7 @@ const notify = require('gulp-notify');
 
 const path = {
   'html': {
-    'dest': 'dist',
+    'dest': 'public',
     'src': 'src/hbs',
     'files': '**/*.hbs',
   },
@@ -68,6 +68,6 @@ gulp.task('js', (done) => {
 // Task: Default
 gulp.task('default',
   gulp.series(clean,
-    gulp.parallel('js')
+    gulp.parallel('html', 'js')
   )
 );
