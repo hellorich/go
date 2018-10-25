@@ -1,5 +1,11 @@
 const gulp = require('gulp');
 const del = require('del');
+const handlebars = require('gulp-compile-handlebars');
+const plumber = require('gulp-plumber');
+const notify = require('gulp-notify');
+const sass = require('gulp-sass');
+const concat = require('gulp-concat');
+const autoprefixer = require('gulp-autoprefixer');
 const babel = require('gulp-babel');
 const browserify = require('browserify');
 const babelify = require('babelify');
@@ -7,10 +13,7 @@ const buffer = require('vinyl-buffer');
 const source = require('vinyl-source-stream');
 const uglify = require('gulp-uglify');
 const sourcemaps = require('gulp-sourcemaps');
-const rename = require('gulp-ext-replace');
-const handlebars = require('gulp-compile-handlebars');
-const plumber = require('gulp-plumber');
-const notify = require('gulp-notify');
+const ext = require('gulp-ext-replace');
 
 const server = require('browser-sync').create();
 
@@ -19,6 +22,11 @@ const path = {
     'dest': 'public',
     'src': 'src/hbs',
     'files': '**/*.hbs',
+  },
+  'styles': {
+    'dest': 'public/assets/css',
+    'src' : 'src/scss',
+    'files': '**/*.scss',
   },
   'scripts': {
     'dest': 'public/assets/js',
@@ -43,7 +51,7 @@ gulp.task('html', (done) => {
     .pipe(handlebars({}, {
       batch: `${path.html.src}/partials`
     }))
-    .pipe(rename('.html'))
+    .pipe(ext('.html'))
     .pipe(gulp.dest(path.html.dest));
   done();
 });
@@ -56,7 +64,7 @@ gulp.task('css', (done) => {
     .pipe(plumber({ errorHandler: function(err) {
       notify.onError({
         title: 'Gulp error in ' + err.plugin,
-        message:  err.toString()
+        message: err.toString()
       })(err);
     }}))
     .pipe(sourcemaps.init())
@@ -66,7 +74,7 @@ gulp.task('css', (done) => {
     .pipe(autoprefixer({
       browsers: ['last 2 versions'] // Adjust this to our requirements in a config file
     }))
-    //.pipe(concat('styles.css'))
+    .pipe(concat('styles.css'))
     .pipe(sourcemaps.write('./maps'))
     .pipe(gulp.dest(path.styles.dest));
   done();
