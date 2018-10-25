@@ -7,8 +7,7 @@
     "node": "10.12.0"
   },
   "scripts": {
-    "start": "gulp -- server",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "gulp -- server"
   },
   "repository": {
     "type": "git",
