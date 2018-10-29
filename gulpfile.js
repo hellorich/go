@@ -137,7 +137,7 @@ gulp.task('server', (done) => {
   });
 
   gulp.watch(`${path.html.src}/${path.html.files}`, gulp.series('html', 'reload'));
-  gulp.watch(`${path.images.src}/${path.images.files}`, gulp.series('img', 'reload'))
+  gulp.watch(`${path.images.src}/${path.images.files}`, gulp.series('img', 'reload'));
   gulp.watch(`${path.styles.src}/${path.styles.files}`, gulp.series('css', 'reload'));
   gulp.watch(`${path.scripts.src}/${path.scripts.files}`, gulp.series('js', 'reload'));
   done();
