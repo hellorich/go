@@ -48,7 +48,7 @@ const path = {
 const clean = () => del(['public']);
 
 // Task: HTML
-gulp.task('html', (done) => {
+gulp.task('html', () => {
   gulp.src([`${path.html.src}/${path.html.files}`, `!${path.html.src}/partials/${path.html.files}`])
     .pipe(plumber({ errorHandler: function(err) {
       notify.onError({
@@ -61,25 +61,23 @@ gulp.task('html', (done) => {
     }))
     .pipe(ext('.html'))
     .pipe(gulp.dest(path.html.dest));
-  done();
 });
 
 // Task: Images
 // Uses image min to process project image files
-gulp.task('img', (done) => {
+gulp.task('img', () => {
   gulp.src(`${path.images.src}/${path.images.files}`)
     .pipe(imagemin({
       progressive: true,
       use: [pngquant()]
     }))
     .pipe(gulp.dest(path.images.dest));
-  done();
 });
 
 // Task: CSS
 // Generate SCSS dependencies, custom code, compress it and prefix it,
 // then compile into single file for best performance in HTTP/1.1
-gulp.task('css', (done) => {
+gulp.task('css', () => {
   gulp.src([`${path.styles.src}/${path.styles.files}`])
     .pipe(plumber({ errorHandler: function(err) {
       notify.onError({
@@ -97,12 +95,11 @@ gulp.task('css', (done) => {
     .pipe(concat('styles.css'))
     .pipe(sourcemaps.write('./maps'))
     .pipe(gulp.dest(path.styles.dest));
-  done();
 });
 
 // Task: JavaScript
 // Uses Babel to allow modern JavaScript to be used.
-gulp.task('js', (done) => {
+gulp.task('js', () => {
   browserify({
     extensions: ['.js'],
     entries: `${path.scripts.src}/app.js`,
@@ -116,17 +113,15 @@ gulp.task('js', (done) => {
   .pipe(uglify())
   .pipe(sourcemaps.write('./maps'))
   .pipe(gulp.dest(path.scripts.dest));
-  done();
 });
 
 // Task: Reload BrowserSync server
-gulp.task('reload', (done) => {
+gulp.task('reload', () => {
   server.reload();
-  done();
 });
 
 // Task: BrowserSync server configuration and watch paths
-gulp.task('server', (done) => {
+gulp.task('server', () => {
   server.init({
     browser: 'google chrome',
     notify: false,
@@ -140,7 +135,6 @@ gulp.task('server', (done) => {
   gulp.watch(`${path.images.src}/${path.images.files}`, gulp.series('img', 'reload'));
   gulp.watch(`${path.styles.src}/${path.styles.files}`, gulp.series('css', 'reload'));
   gulp.watch(`${path.scripts.src}/${path.scripts.files}`, gulp.series('js', 'reload'));
-  done();
 });
 
 // Task: Default
