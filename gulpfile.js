@@ -17,6 +17,9 @@ const uglify = require('gulp-uglify');
 const sourcemaps = require('gulp-sourcemaps');
 const ext = require('gulp-ext-replace');
 
+const standard = require('gulp-standard');
+const sassLint = require('gulp-sass-lint');
+
 const server = require('browser-sync').create();
 
 const path = {
@@ -77,7 +80,7 @@ gulp.task('img', () => {
 // Task: CSS
 // Generate SCSS dependencies, custom code, compress it and prefix it,
 // then compile into single file for best performance in HTTP/1.1
-gulp.task('css', () => {
+gulp.task('css', (done) => {
   gulp.src([`${path.styles.src}/${path.styles.files}`])
     .pipe(plumber({ errorHandler: function(err) {
       notify.onError({
@@ -95,11 +98,21 @@ gulp.task('css', () => {
     .pipe(concat('styles.css'))
     .pipe(sourcemaps.write('./maps'))
     .pipe(gulp.dest(path.styles.dest));
+  done()
+});
+
+// Task: SASS Lint
+gulp.task('sass-lint', (done) => {
+  gulp.src([`${path.styles.src}/${path.styles.files}`])
+    .pipe(sassLint({'config': '.sass-lint.yml'}))
+    .pipe(sassLint.format())
+    .pipe(sassLint.failOnError())
+  done()
 });
 
 // Task: JavaScript
 // Uses Babel to allow modern JavaScript to be used.
-gulp.task('js', () => {
+gulp.task('js', (done) => {
   browserify({
     extensions: ['.js'],
     entries: `${path.scripts.src}/app.js`,
@@ -113,6 +126,17 @@ gulp.task('js', () => {
   .pipe(uglify())
   .pipe(sourcemaps.write('./maps'))
   .pipe(gulp.dest(path.scripts.dest));
+  done()
+});
+
+// Task: JavaScript Standard
+gulp.task('js-lint', (done) => {
+  gulp.src(`${path.scripts.src}/${path.scripts.files}`)
+    .pipe(standard())
+    .pipe(standard.reporter('default', {
+      quiet: true
+    }));
+  done()
 });
 
 // Task: Reload BrowserSync server
@@ -133,13 +157,15 @@ gulp.task('server', () => {
 
   gulp.watch(`${path.html.src}/${path.html.files}`, gulp.series('html', 'reload'));
   gulp.watch(`${path.images.src}/${path.images.files}`, gulp.series('img', 'reload'));
-  gulp.watch(`${path.styles.src}/${path.styles.files}`, gulp.series('css', 'reload'));
-  gulp.watch(`${path.scripts.src}/${path.scripts.files}`, gulp.series('js', 'reload'));
+  gulp.watch(`${path.styles.src}/${path.styles.files}`, gulp.series('sass-lint', 'css', 'reload'));
+  gulp.watch(`${path.scripts.src}/${path.scripts.files}`, gulp.series('js-lint', 'js', 'reload'));
 });
 
 // Task: Default
 gulp.task('default',
   gulp.series(clean,
-    gulp.parallel('html', 'img', 'css', 'js', 'server')
+    gulp.series('sass-lint', 'css'),
+    gulp.series('js-lint', 'js'),
+    gulp.parallel('html', 'img', 'server')
   )
 );
